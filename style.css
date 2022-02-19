@@ -22,7 +22,9 @@ header, form{
     align-items: center;
         flex-wrap: wrap;
 }
-
+form input{
+    width: 200px;
+}
 form input, form button{
     font-size: 2rem;
     padding: 0.5rem;
