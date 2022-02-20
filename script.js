@@ -1,159 +1,72 @@
 //selectors
-const todoInput=document.querySelector('.todo-input');
-const todoButton=document.querySelector('.todo-button');
-const todoList=document.querySelector('.todo-list');
-const filterTodo=document.querySelector('.filter-todo');
+const title=document.querySelector('.title');
+const prev=document.querySelector('.prev');
+const playPause=document.querySelector('.playPause');
+const next=document.querySelector('.next');
+const audio=document.querySelector('audio');
 
-// event listeners
-document.addEventListener('DOMContentLoaded',getLocalTodos)
-todoButton.addEventListener('click',addTodo)
-todoList.addEventListener('click',deleteCheck)
-filterTodo.addEventListener('change',filterTodos)
-//functions
-function addTodo(event)
+//events
+playPause.addEventListener('click',()=>{
+    songPlays?pauseSong():playSong()
+})
+prev.addEventListener('click',previousSong)
+next.addEventListener('click',nextSong)
+
+//
+const songList=[
+    {path:'Nesamaguren.mp3',
+        songName:'Nesamaguren'},
+    {path:'Sirivennela.mp3',
+        songName:'Sirivennela'},
+    {path:'Srivalli.mp3',
+        songName:'Srivalli'},
+]
+
+var songPlays=false;
+function playSong()
 {
-    event.preventDefault();
-    //div element
-    const todoDiv=document.createElement('div');
-    todoDiv.classList.add('todo');
-    // todo li
-    const newTodo=document.createElement('li');
-    newTodo.classList.add('todo-item');
-    newTodo.innerText=todoInput.value
-    todoDiv.appendChild(newTodo);
-    //SAVE TODO ON LOACALSTORAGE
-    saveLocalTodos(todoInput.value);
-    //check mark button
-    const completedButton=document.createElement('button');
-    completedButton.classList.add('complete-btn');
-    // completedButton.innerHTML='<i class="fa-solid fa-square-check"></i>';
-    completedButton.innerHTML='<i class="fa-solid fa-check"></i>';
-    todoDiv.appendChild(completedButton);
-    //ctrash mark button
-    const trashButton=document.createElement('button');
-    trashButton.classList.add('trash-btn');
-    trashButton.innerHTML='<i class="fa-solid fa-trash"></i>';
-    todoDiv.appendChild(trashButton);
-
-    //aAPPEND TO LIST
-    todoList.appendChild(todoDiv)
-    
-    //CLEAR INPUT VALUE
-    todoInput.value=null;
-
+    songPlays=true;
+    audio.play();
+    playPause.classList.add('active');
+    playPause.innerHTML='<ion-icon name="pause-outline"></ion-icon>'
 }
 
-function deleteCheck(e)
+function pauseSong()
 {
-    const item=e.target;
-    // delete the todo
-    if(item.classList[0] === 'trash-btn')
-    {
-        let todo=item.parentElement;
-        todo.classList.add('fall');
-        removeLocalItem(todo)
-        todo.addEventListener('transitionend',function(){
-            todo.remove();
-        })
-        // todo.remove();
-    }
-
-    if(item.classList[0] === 'complete-btn')
-    {
-        let todo=item.parentElement;
-        todo.classList.add('completed');
-    }
+    songPlays=false;
+    audio.pause();
+    playPause.classList.remove('active');
+    playPause.innerHTML='<ion-icon name="play-outline"></ion-icon>';
 }
 
-function filterTodos(e)
+function loadSong(song)
 {
-    console.log(e)
-    const todos=todoList.childNodes;
-    todos.forEach(function(todo)
-    {
-        switch(filterTodo.value)
-        {
-            case 'all':
-                todo.style.display='flex';
-                break;
-            case 'completed':
-                if(todo.classList.contains('completed'))
-                {
-                    todo.style.display='flex';
-                }else{
-                    todo.style.display='none';
-                }
-                break;
-            case "uncompleted":
-                if(!todo.classList.contains('completed'))
-                {
-                    todo.style.display='flex';
-                }else{
-                    todo.style.display='none'
-                }
-                break;
-        }
-    })
+    title.textContent=song.songName
+    audio.src=song.path
 }
+let i=0;
+loadSong(songList[i])
 
-function saveLocalTodos(todo)
+function previousSong()
 {
-    let todos;
-    if(localStorage.getItem('todos') === null)
+    if(i==0)
     {
-        todos=[]
+        i=(songList.length-1)
     }else{
-        todos=JSON.parse(localStorage.getItem('todos'));
+        i--;
     }
-    todos.push(todo);
-    localStorage.setItem('todos',JSON.stringify(todos));
+    loadSong(songList[i])
+    playSong();
 }
 
-function getLocalTodos()
+function nextSong()
 {
-    let todos;
-    if(localStorage.getItem('todos') === null)
+    if(i==songList.length-1)
     {
-        todos=[]
+        i=1
     }else{
-        todos=JSON.parse(localStorage.getItem('todos'));
+        i++;
     }
-    todos.forEach(function(todo)
-    {
-        const todoDiv=document.createElement('div');
-        todoDiv.classList.add('todo');
-        // todo li
-        const newTodo=document.createElement('li');
-        newTodo.classList.add('todo-item');
-        newTodo.innerText=todo
-        todoDiv.appendChild(newTodo);
-        //check mark button
-        const completedButton=document.createElement('button');
-        completedButton.classList.add('complete-btn');
-        // completedButton.innerHTML='<i class="fa-solid fa-square-check"></i>';
-        completedButton.innerHTML='<i class="fa-solid fa-check"></i>';
-        todoDiv.appendChild(completedButton);
-        //ctrash mark button
-        const trashButton=document.createElement('button');
-        trashButton.classList.add('trash-btn');
-        trashButton.innerHTML='<i class="fa-solid fa-trash"></i>';
-        todoDiv.appendChild(trashButton);
-
-        //aAPPEND TO LIST
-        todoList.appendChild(todoDiv)
-    })
-}
-
-function removeLocalItem(todo)
-{
-    let todos;
-    if(localStorage.getItem('todos') === null)
-    {
-        todos=[]
-    }else{
-        todos=JSON.parse(localStorage.getItem('todos'));
-    }
-    let todoIndex=todo.children[0].innerText
-    todos.splice(todos.indexOf(todo),1);
-    localStorage.setItem('todos',JSON.stringify(todos));
+    loadSong(songList[i]);
+    playSong();
 }
