@@ -138,6 +138,7 @@ function resetValues()
     document.getElementById('desc').value = ''
     spentType=null;
     selectedPerson=null;
+    document.getElementById('desc').style.display='none'
 }
 
 function renderEl(value,el)
