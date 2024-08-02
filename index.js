@@ -41,9 +41,9 @@ function init()
     if(!remainingAmount)
     {
         localStorage.setItem('remaining',JSON.stringify('25000'))
-        renderEl('25000','remain');
+        renderEl('25000');
     }else{
-        renderEl(remainingAmount,'remain');
+        renderEl(remainingAmount);
     }
 }
 
@@ -88,7 +88,7 @@ function saveData()
             document.getElementById('desc').style.display='none'
         }else{
             let history=JSON.parse(localStorage.getItem('history'));
-            let a={desc:spentType,amount:price}
+            let a={desc:spentType  == 'Others' ?desc:spentType,amount:price}
             history.push(a)
             localStorage.setItem('history',JSON.stringify(history));
             this.createTable([a],'history-body')
@@ -97,7 +97,7 @@ function saveData()
             {
                 let balance=parseFloat(remainingAmount) - parseFloat(price);
                 localStorage.setItem('remaining',JSON.stringify(balance));
-                renderEl(balance,'remain')
+                renderEl(balance)
             }
 
         }
@@ -141,20 +141,11 @@ function resetValues()
     document.getElementById('desc').style.display='none'
 }
 
-function renderEl(value,el)
+function renderEl(value)
 {
-    let a=`.${el}`
-    let ele=document.querySelector(a);
+    let ele=document.querySelector('.remain');
     console.log(ele.childNodes[0]?.nodeValue);
     ele.innerHTML=value;
-    // let textNode=document.createTextNode(value);
-    // if(ele.childNodes.length)
-    // {
-    //     ele.replaceChild(ele.childNodes[0]?.nodeValue,textNode);
-    // }else{
-    //     ele.appendChild(textNode);
-    // }
-    
 }
 
 function toggleModal()
@@ -166,5 +157,50 @@ function toggleModal()
     }else{
         document.querySelector('.modal').style.display='block'
     }
+
+}
+
+function reset()
+{
+    // localStorage.clear();
+    localStorage.setItem('extras',JSON.stringify([]))
+    localStorage.setItem('history',JSON.stringify([]))
+    localStorage.setItem('remaining','25000');
+    let el1=document.querySelector('.extras-body').childNodes
+    let el2=document.querySelector('.history-body').childNodes
+    console.log(el1,el2);
+    if(el1.length > 1)
+    {
+        for(let item of el1)
+        {
+            if(item.nodeName == 'TR')
+                item.remove();
+        }
+    }
+    if(el2.length > 1)
+    {
+        for(let item of el2)
+        {
+            if(item.nodeName == 'TR')
+                item.remove();
+        }
+    }
+    // for(let)
+    // for(let)
+    // console.log(childNodes);
+    // for(let body of bodies)
+    // {
+    //     for(let child of body.childNodes)
+    //     {
+    //         if(child.nodeName == 'tr')
+    //         {
+    //             console.log(child)
+    //             child.remove()
+
+    //         }
+    //     }
+    // }
+    renderEl(25000)
+    // init()
 
 }
