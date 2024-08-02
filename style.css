@@ -2,7 +2,10 @@
     margin: 0;
     padding: 0;
 }
-
+body{
+  background: #0C1018;
+  color: #ffffff;
+}
 
 .container{
     padding: 10px 50px 50px 50px;
@@ -32,12 +35,14 @@ table {
     width: 100%;
     font-size: 12px;
     margin-top: 10px;
+    background: #191D27;
   }
   thead{
     background-color: #d7d7d7;
+    color: #000000;
   }
   td, th {
-    border-bottom: 1px solid #dddddd;
+    /* border-bottom: 1px solid #dddddd; */
     text-align: left;
     padding: 8px;
   }
@@ -69,6 +74,7 @@ table {
     width: 45%;
     height: auto;
     padding: 34px;
+    background: #0C1018;
   }
 
   textarea{
